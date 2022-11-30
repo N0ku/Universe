@@ -12,30 +12,31 @@ const camera = new THREE.PerspectiveCamera(
 );
 
 const renderer = new THREE.WebGLRenderer({
-  canvas: document.querySelector("#back"),
+  canvas: document.querySelector("#app"),
 });
 
 renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.setZ(30);
 
-const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
+const geometry = new THREE.SphereGeometry(15, 32, 16);
+
+const texture = new THREE.TextureLoader().load(
+  "textures/8081_earthlights10k.jpg"
+);
 
 const material = new THREE.MeshBasicMaterial({
-  color: 0x326ba8,
-  wireframe: true,
+  map: texture,
 });
 
-const torus = new THREE.Mesh(geometry, material);
+const earth = new THREE.Mesh(geometry, material);
 
-scene.add(torus);
+scene.add(earth);
 
 function animate() {
   requestAnimationFrame(animate);
 
-  torus.rotation.x += 0.01;
-  torus.rotation.y += 0.005;
-  torus.rotation.z += 0.01;
+  earth.rotation.y += 0.005;
   renderer.render(scene, camera);
 }
 
