@@ -21,4 +21,10 @@ a {
   right: 5px;
   font-family: 'Roboto', sans-serif;
   text-decoration: none;
+  transition: all 200ms ease-in-out;
+}
+
+a:hover{
+  color:rgb(62, 62, 242);
+  text-decoration: underline;
 }

@@ -2,6 +2,7 @@ import "./style.css";
 
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { PointLightHelper } from "three";
 
 const scene = new THREE.Scene();
 
@@ -20,43 +21,72 @@ renderer.setPixelRatio(window.devicePixelRatio);
 renderer.setSize(window.innerWidth, window.innerHeight);
 camera.position.setZ(30);
 
-const geometry = new THREE.SphereGeometry(16, 32, 16);
+/* EARTH -S */
 
-const texture = new THREE.TextureLoader().load("textures/earth.jpg");
+function CreateEarth() {
+  const geometry = new THREE.SphereGeometry(100, 62, 32);
 
-const material = new THREE.MeshBasicMaterial({
-  map: texture,
-});
+  const texture = new THREE.TextureLoader().load("textures/day.jpg");
+  const normal = new THREE.TextureLoader().load(
+    "textures/8k_earth_normal_map.tif"
+  );
 
-const earth = new THREE.Mesh(geometry, material);
+  const material = new THREE.MeshStandardMaterial({
+    map: texture,
+    color: 0x4287f5,
+  });
 
-const sunLight = new THREE.AmbientLight(0x404040, 1);
+  const earth = new THREE.Mesh(geometry, material);
+  return earth;
+}
+
+/* EARTH -E */
+
+/* MOON -S */
+
+function CreateMoon() {
+  const geometry = new THREE.SphereGeometry(2, 32, 16);
+
+  const texture = new THREE.TextureLoader().load("textures/8k_moon.jpg");
+
+  const material = new THREE.MeshBasicMaterial({
+    map: texture,
+  });
+
+  const moon = new THREE.Mesh(geometry, material);
+
+  moon.name = "moon";
+
+  return moon;
+}
+
+/* MOON -E */
+
+const earthLight = new THREE.AmbientLight(0x404040, 0.5);
+const sun = new THREE.DirectionalLight(0x404040, 12); // white 0x404040
 
 const canvas = document.getElementById("app");
 
-var raycaster = new THREE.Raycaster();
-var mouse = new THREE.Vector2();
-var targetMesh;
+scene.add(earthLight);
+scene.add(sun);
 
-function onMouseClick(event) {
-  raycaster.setFromCamera(mouse, camera);
-  var isIntersected = raycaster.intersectObject(targetMesh);
-  if (isIntersected) {
-    console.log("Mesh clicked!");
-  }
+sun.position.set(100, 0, 0);
+earthLight.position.set(0, 0, 0);
+
+let earth = CreateEarth();
+let moon = CreateMoon();
+
+if (scene.getObjectByName("moon")) {
+  console.log("true");
 }
-
-function onMouseMove(event) {
-  mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
-  mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
-}
-canvas.addEventListener("mouseclick", onMouseClick);
-canvas.addEventListener("mousemove", onMouseMove);
-
-scene.add(sunLight);
-sunLight.position.set(0, 30, 0);
-
 scene.add(earth);
+/* earth.add(moon); */
+
+const size = 1000;
+const divisions = 100;
+
+const gridHelper = new THREE.GridHelper(size, divisions);
+scene.add(gridHelper);
 
 const controls = new OrbitControls(camera, renderer.domElement);
 
@@ -64,6 +94,7 @@ function animate() {
   requestAnimationFrame(animate);
 
   earth.rotation.y += 0.002;
+  moon.rotation.y = Math.PI / 2;
 
   controls.update();
   renderer.render(scene, camera);
