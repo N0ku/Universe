@@ -1,0 +1,25 @@
+# Ignorer les dépendances installées
+node_modules
+npm-debug.log
+yarn-error.log
+
+# Ignorer les fichiers de build locaux
+build
+dist
+
+# Ignorer les fichiers de configuration de l'éditeur et du système
+.DS_Store
+.vscode
+.idea
+*.swp
+
+# Ignorer les fichiers de logs et environnement
+.env
+.env.local
+.env.development
+.env.production
+.env.test
+*.log
+
+# Ignorer les fichiers Docker potentiellement générés
+docker-compose.override.yml
